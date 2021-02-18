@@ -11,7 +11,7 @@
       </el-form-item>
       <el-form-item>
         <div >
-          <a href="/register" target="_self" class="login-a" >注册</a><a href="#" target="_self" class="login-a">忘记密码？</a>
+          <a href="/register" target="_self" class="login-a" >注册</a><a href="/forgot" target="_self" class="login-a">忘记密码？</a>
         </div>
         <el-button class="login-button" type="primary" @click="submitClick('loginForm')">登录</el-button>
       </el-form-item>

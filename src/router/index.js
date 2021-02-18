@@ -5,6 +5,7 @@ import loginView from "@/views/loginView";
 import registerView from "@/views/registerView";
 import mainMenu from "@/components/mainMenu";
 import homeworkStudent from "@/components/homeworkStudent";
+import forgotPasswordView from "@/views/forgotPasswordView"
 Vue.use(VueRouter)
 
 const routes = [
@@ -17,6 +18,11 @@ const routes = [
     path: '/register',
     name: 'registerView',
     component: registerView
+  },
+  {
+    path:'/forgot',
+    name:'forgotPasswordView',
+    component: forgotPasswordView
   },
   {
     path: '/home',

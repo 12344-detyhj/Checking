@@ -4,7 +4,7 @@
              :rules="rules">
       <h3>注册账户</h3>
       <el-form-item prop="username">
-        <el-input type="text" v-model="registerForm.username" auto-complete="off" placeholder="用户名（学号/工号）"></el-input>
+        <el-input type="text" v-model="registerForm.account" auto-complete="off" placeholder="用户名（学号/工号）" :required="true"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input type="password" v-model="registerForm.password" auto-complete="off" placeholder="密码" maxlength="20" show-password></el-input>
@@ -31,7 +31,7 @@ export default {
   name: "register",
   data(){
 
-    var validatorPhone=(rule,value,callback)=> {
+    let validatorPhone=(rule,value,callback)=> {
       if (value === '') {
         callback(new Error('手机号不能为空'))
       } else if (!/^1\d{10}$/.test(value)) {
@@ -40,7 +40,7 @@ export default {
         callback()
       }
     };
-    var validatorcheckPassword=(rule,value,callback)=>{
+    let validatorcheckPassword=(rule,value,callback)=>{
       if(value===''){
         callback(new Error('再次输入密码'))
       }else if(!value===this.registerForm.password){
@@ -49,7 +49,7 @@ export default {
         callback()
       }
     };
-    var validatorEmail=(rule,value,callback)=>{
+    let validatorEmail=(rule,value,callback)=>{
       if (value === '') {
         callback(new Error('邮箱地址不能为空'))
       } else if (!/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value)) {
@@ -60,12 +60,11 @@ export default {
     };
     return{
       rules: {
-        username: [
+        account: [
           {required: true, message: '请输入用户名', trigger: 'blur'}
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
-
         ],
         checkPassword: [
           {required:true,validator:validatorcheckPassword,trigger:'blur'}
@@ -78,18 +77,42 @@ export default {
         ]
       },
       registerForm: {
-        username: "",
+        account: "",
         password: "",
         checkPassword:"",
         email:"",
         phone:""
       },
+      loading:false
     }
   },
   methods:{
 
     submitRegister(registerData){
-
+      this.$router.go(-1)
+      this.$refs[registerData].validate(valid => {
+        // console.log(this.registerForm.account+"+"+this.registerForm.password)
+        if (valid) {
+          // alert('提交成功！')
+          this.loading=true
+          this.$http({
+            method:"get",
+            url:"http://localhost:1111/register?account="+this.registerForm.account+"&password="+this.registerForm.password+"&email="+this.registerForm.email+"&phone="+this.registerForm.phone,
+          }).then(function (res){
+            this.loading=false
+            let status=res.data["registerStatus"]
+            if(status===false){
+              this.$message.error(res.data["reason"])
+            }else {
+              this.$message.success("注册成功!")
+              this.$router.go(-1)
+            }
+          });
+        } else {
+          console.log("error submit！")
+          return false
+        }
+      })
     }
   }
 
