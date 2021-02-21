@@ -3,6 +3,7 @@
 <!--    router :default-active="$route.path"-->
     <el-aside class="el-aside">
       <h2>welcome!</h2>
+      <div v-text=this.userName+"身份："+this.identity></div>
       <el-menu  class="menu">
         <router-link  to="/mainMenu" class="menu-item" tag="div">
           <el-menu-item>main</el-menu-item>
