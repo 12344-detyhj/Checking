@@ -17,17 +17,18 @@ public class UserDAO {
         Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);//获取数据库的连接
         Statement stmt = conn.createStatement();//创建数据库的操作对象
         String sql = "SELECT Id,LoginPwd,Name FROM users" ;//sql语句
-        String Idj = "161930227";
-        String selectSQL = "SELECT Id,LoginPwd,Name FROM users WHERE Id = '"+Idj+"' ";
+        String selectSQL = "SELECT Id,LoginPwd,Name, Stat FROM users WHERE Id = '"+account+"' ";
         ResultSet rs = stmt.executeQuery(sql);//运行sql语句
-        while(rs.next())
-        {
-            user.updateAccount(rs.getString("Id"));
-            user.updatePassword(rs.getString("LoginPwd"));//其余数据待添加
-            if(user.getAccount().equals(account)){
-                break;
-            }
-            user = null;
+        user = null;
+        while(rs.next()) {
+            String Account = rs.getString("Id");
+            String Password = rs.getString("LoginPwd");
+            String NAME = rs.getString("Name");
+            int STAT = rs.getString("Stat");
+            user.updateAccount(Account);
+            user.updatePassword(Password);
+            user.updateName(NAME);
+            user.updateIdentity(STAT);//其余数据待添加
         }
         return user;
     }
