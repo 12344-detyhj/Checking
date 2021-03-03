@@ -3,7 +3,9 @@
 <!--    router :default-active="$route.path"-->
     <el-aside class="el-aside">
       <h2>welcome!</h2>
-      <div v-text=this.userName+"身份："+this.identity></div>
+<!--      <div v-text=this.userName+"身份："+this.identity></div>-->
+      <div>id:{{identity}}</div>
+      <div>name:{{userName}}</div>
       <el-menu  class="menu">
         <router-link  to="/mainMenu" class="menu-item" tag="div">
           <el-menu-item>main</el-menu-item>
@@ -16,24 +18,28 @@
     <el-main class="content el-main">
       <router-view/>
     </el-main>
-
   </div>
 </template>
 
 <script>
+
 // @ is an alias to /src
-import login from "@/components/login";
 import mainMenu from "@/components/mainMenu";
+import homeworkStudent from "@/components/homeworkStudent";
 export default {
   name: 'Home',
   components: {
-    login,
-    mainMenu
+    mainMenu,
+    homeworkStudent,
+  },
+  mounted:function(){
+      console.log(this.identity)
+      console.log(this.userName)
   },
   data(){
     return{
-      identity: this.$route.params.identity,
-      userName: this.$route.params.userName,
+      identity: this.$route.query.identity,
+      userName: this.$route.query.userName,
     }
   }
 }

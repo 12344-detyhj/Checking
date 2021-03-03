@@ -32,7 +32,7 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     redirect:'/mainMenu',
     component: Home,
-      // main:mainMenu
+    // main:mainMenu,
     children:[
       {
         path:'/mainMenu',

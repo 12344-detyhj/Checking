@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Login",
   data() {
@@ -42,28 +43,48 @@ export default {
   methods: {
     submitClick(loginData) {
       // 表单验证
-      this.$refs[loginData].validate(valid => {
-        console.log(this.loginForm.account+"+"+this.loginForm.password)
+      let vm=this
+      vm.$refs[loginData].validate(valid => {
+        console.log(vm.loginForm.account+"+"+vm.loginForm.password)
         if (valid) {
           // alert('提交成功！')
-          this.loading=true
-          this.$http({
-            method:"get",
-            url:"http://localhost:1111/login?account="+this.loginForm.account+"&password="+this.loginForm.password,
-          }).then(function (res){
-            this.loading=false
-            let status=res.data["loginStatus"]
-            if(status===false){
-              this.$message.error(res.data["reason"])
-            }else {
-              this.$router.push({
-                name:'Home',
-                params:{
-                  identity:res.data["identity"],
-                  userName:res.data["userName"],
-                }
-              })
-            }
+          vm.loading=true
+          // this.$http({
+          //   method:"get",
+          //   url:"/mockapi/login?account="+this.loginForm.account+"&password="+this.loginForm.password,
+          // }).then(function (res){
+          //   this.loading=false
+          //   let status=res.data["loginStatus"]
+          //   if(status===false){
+          //     this.$message.error(res.data["reason"])
+          //   }else {
+          //     this.$router.push({
+          //       name:'Home',
+          //       params:{
+          //         identity:res.data["identity"],
+          //         userName:res.data["userName"],
+          //       }
+          //     })
+          //   }
+          // });
+
+          axios.get("/mockapi/login").then(function (res){
+              vm.loading=false
+
+              let status=res.data["loginStatus"]
+              if(status===false){
+                vm.$message.error(res.data["reason"])
+              }else {
+                console.log(res.data["userName"])
+                console.log(res.data["identity"])
+                vm.$router.push({
+                  name:'Home',
+                  query:{
+                    identity:res.data["identity"],
+                    userName:res.data["userName"],
+                  }
+                })
+              }
           });
         } else {
           console.log("error submit！")
