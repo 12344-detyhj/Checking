@@ -16,19 +16,39 @@ public class UserDAO {
         Class.forName(DRIVER);//将数据库的驱动程序加载到容器内部
         Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);//获取数据库的连接
         Statement stmt = conn.createStatement();//创建数据库的操作对象
-        String sql = "SELECT Id,LoginPwd,Name FROM users" ;//sql语句
-        String selectSQL = "SELECT Id,LoginPwd,Name, Stat FROM users WHERE Id = '"+account+"' ";
+        String sql = "SELECT Id,LoginPwd,Name Token FROM users" ;//sql语句
+        String selectSQL = "SELECT Id,LoginPwd,Name,Token FROM users WHERE Id = "+account+" ";
         ResultSet rs = stmt.executeQuery(sql);//运行sql语句
         user = null;
         while(rs.next()) {
             String Account = rs.getString("Id");
             String Password = rs.getString("LoginPwd");
             String NAME = rs.getString("Name");
-            int STAT = rs.getString("Stat");
+            String TOKEN = rs.getString("Token");
             user.updateAccount(Account);
             user.updatePassword(Password);
             user.updateName(NAME);
-            user.updateIdentity(STAT);//其余数据待添加
+            user.updateToken(TOKEN);//其余数据待添加
+        }
+        return user;
+    }
+    public User getByToken(String token){
+        User user = new User();
+        Class.forName(DRIVER);//将数据库的驱动程序加载到容器内部
+        Connection conn = DriverManager.getConnection(URL, USER, PASSWORD);//获取数据库的连接
+        Statement stmt = conn.createStatement();//创建数据库的操作对象
+        String sql = "SELECT Id,LoginPwd,Name FROM users" ;//sql语句
+        String selectSQL = "SELECT Id,LoginPwd,Name, Stat FROM users WHERE Token = '"+token+"' ";
+        ResultSet rs = stmt.executeQuery(sql);//运行sql语句
+        user = null;
+        while(rs.next()) {
+            String Account = rs.getString("Id");
+            String Password = rs.getString("LoginPwd");
+            String NAME = rs.getString("Name");
+            user.updateAccount(Account);
+            user.updatePassword(Password);
+            user.updateName(NAME);
+            user.updateToken(token);//其余数据待添加
         }
         return user;
     }

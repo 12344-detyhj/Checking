@@ -6,4 +6,7 @@ public class UserService {
     public User login(String account){
         return userDAO.getByAccount(account);
     }
+    public User loginByToken(String token){
+        return userDAO.getByToken(token);
+    }
 }

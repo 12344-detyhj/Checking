@@ -7,6 +7,7 @@ public class User {
     private int identity;//确认为老师还是学生,学生为0，老师为1
     private String email;
     private String phone;
+    private String token;
     public String getPassword(){
         return password;
     }
@@ -19,6 +20,9 @@ public class User {
     public String getName(){
         return name;
     }
+    public String getToken(){
+        return token;
+    }
     public void updateAccount(String Account){
         account = Account;
     }
@@ -28,7 +32,9 @@ public class User {
     public void updateName(String Name){
         name = Name;
     }
+    public void updateToken(String Token){token = Token;}
     public void updateIdentity(int Stat){
         identity = Stat;
     }
+
 }
