@@ -8,7 +8,7 @@
 
 <script>
 import Background from "@/components/background";
-import Register from "@/components/register";
+import Register from "@/views/register/components/register";
 export default {
   name: "registerView",
   components: {Register, Background}

@@ -1,12 +1,10 @@
 <template>
-<div class="mainMenu">
-  <p>mainmenu</p>
-</div>
+<div>HOMEWORK</div>
 </template>
 
 <script>
 export default {
-  name: "mainMenu"
+  name: "homeworkTeacher"
 }
 </script>
 

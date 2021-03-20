@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import forgotPassword from "@/components/forgotPassword";
+import forgotPassword from "@/views/forgotPassword/components/forgotPassword";
 import Background from "@/components/background";
 export default {
   name: "forgotPasswordView",

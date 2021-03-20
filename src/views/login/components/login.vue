@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import {Message}from 'element-ui'
 export default {
   name: "Login",
   data() {
@@ -38,6 +38,20 @@ export default {
         password: ""
       },
       loading:false,
+      redirect:undefined,
+      otherQuery:{},
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        const query = route.query
+        if (query) {
+          this.redirect = query.redirect
+          this.otherQuery = this.getOtherQuery(query)
+        }
+      },
+      immediate: true
     }
   },
   methods: {
@@ -49,48 +63,27 @@ export default {
         if (valid) {
           // alert('提交成功！')
           vm.loading=true
-          // this.$http({
-          //   method:"get",
-          //   url:"/mockapi/login?account="+this.loginForm.account+"&password="+this.loginForm.password,
-          // }).then(function (res){
-          //   this.loading=false
-          //   let status=res.data["loginStatus"]
-          //   if(status===false){
-          //     this.$message.error(res.data["reason"])
-          //   }else {
-          //     this.$router.push({
-          //       name:'Home',
-          //       params:{
-          //         identity:res.data["identity"],
-          //         userName:res.data["userName"],
-          //       }
-          //     })
-          //   }
-          // });
 
-          axios.get("/mockapi/login").then(function (res){
-              vm.loading=false
-
-              let status=res.data["loginStatus"]
-              if(status===false){
-                vm.$message.error(res.data["reason"])
-              }else {
-                console.log(res.data["userName"])
-                console.log(res.data["identity"])
-                vm.$router.push({
-                  name:'Home',
-                  query:{
-                    identity:res.data["identity"],
-                    userName:res.data["userName"],
-                  }
-                })
-              }
-          });
+          vm.$store.dispatch('token/login',vm.loginForm).then(()=>{
+            vm.loading=false
+            vm.$router.push({path:this.redirect ||'/', query: this.otherQuery});
+          }).catch(err=>{
+            vm.loading=false
+            Message.error(err.message|| "出现错误，请稍后再试");
+          })
         } else {
           console.log("error submit！")
           return false
         }
-      })
+      });
+    },
+    getOtherQuery(query) {
+      return Object.keys(query).reduce((acc, cur) => {
+        if (cur !== 'redirect') {
+          acc[cur] = query[cur]
+        }
+        return acc
+      }, {})
     }
   }
 
