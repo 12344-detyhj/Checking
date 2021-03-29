@@ -1,7 +1,7 @@
 
 import {resetRouter} from "@/router";
 import {getToken, removeToken, setToken} from "@/utils/cookies_token";
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, register } from '@/api/user'
 
 const  state = {
     token:getToken(),
@@ -51,6 +51,16 @@ const actions = {
                 commit('SET_ROLES', roles)
                 resolve(data)
             }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    register({commit, state}, registerForm){
+        return new Promise((resolve, reject)=>{
+            register(registerForm.account, registerForm.password, registerForm.email, registerForm.phone).then(response=>{
+                console.log(response.data.code)
+                resolve()
+            }).catch(error=>{
                 reject(error)
             })
         })

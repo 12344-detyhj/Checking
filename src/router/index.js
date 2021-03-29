@@ -1,13 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home/Home.vue'
-import loginView from "@/views/login/loginView";
-import registerView from "@/views/register/registerView";
-import mainMenu from "@/views/Home/components/mainMenu/mainMenu";
-import homeworkStudent from "@/views/Home/components/homework/homeworkStudent";
-import homeworkTeacher from "@/views/Home/components/homework/homeworkTeacher";
-import forgotPasswordView from "@/views/forgotPassword/forgotPasswordView"
-import page404 from "@/views/errorPage/404"
+// import mainMenu from "@/views/Home/components/mainMenu/mainMenu";
+
 
 
 Vue.use(VueRouter)
@@ -23,17 +18,17 @@ export const constantRoutes=[
   {
     path: '/login',
     name: 'loginView',
-    component: loginView
+    component: ()=>import('@/views/login/loginView')
   },
   {
     path: '/register',
     name: 'registerView',
-    component: registerView
+    component: ()=>import('@/views/register/registerView')
   },
   {
     path:'/forgot',
     name:'forgotPasswordView',
-    component: forgotPasswordView
+    component: ()=>import('@/views/forgotPassword/forgotPasswordView')
   },
   {
     path: '/redirect',
@@ -55,7 +50,7 @@ export const constantRoutes=[
       {
         path:'/mainMenu',
         name:'mainMenu',
-        component:mainMenu,
+        component:()=>import('@/views/mainMenu/mainMenu'),
         meta:{
           title:'mainMenu'
         }
@@ -64,7 +59,7 @@ export const constantRoutes=[
   {
     path: '/404',
     name: '404NotFound',
-    component: page404
+    component: ()=>import('@/views/errorPage/404')
   },
 ]
 
@@ -80,7 +75,7 @@ export const asyncRoutes=[
       {
         path: '/homeworkStu',
         name: 'homeworkStu',
-        component: homeworkStudent,
+        component: ()=>import('@/views/homework/homeworkStudent'),
         meta: {
           title: 'homework',
           roles: ['student'],
@@ -89,7 +84,7 @@ export const asyncRoutes=[
       {
         path: '/homeworkTea',
         name: 'homeworkTea',
-        component: homeworkTeacher,
+        component: ()=>import('@/views/homework/homeworkTeacher'),
         meta: {
           title: 'homework',
           roles: ['teacher']

@@ -3,8 +3,8 @@
     <el-form class="register-container" :model="registerForm" ref="registerForm"
              :rules="rules">
       <h3>注册账户</h3>
-      <el-form-item prop="username">
-        <el-input type="text" v-model="registerForm.account" auto-complete="off" placeholder="用户名（学号/工号）" :required="true"></el-input>
+      <el-form-item prop="account">
+        <el-input type="text" v-model="registerForm.account" auto-complete="off" placeholder="用户名（学号/工号）"></el-input>
       </el-form-item>
       <el-form-item prop="password">
         <el-input type="password" v-model="registerForm.password" auto-complete="off" placeholder="密码" maxlength="20" show-password></el-input>
@@ -19,28 +19,38 @@
         <el-input type="text" v-model="registerForm.phone" auto-complete="off" placeholder="手机号码"></el-input>
       </el-form-item>
       <el-form-item>
-        <el-button class="register-button" type="primary" @click=submitRegister(registerForm)>点击注册</el-button>
+        <el-button class="register-button" type="primary" @click="submitRegister('registerForm')">点击注册</el-button>
       </el-form-item>
-      <a class="login-a" href="/" target="_self">已有账户？点击登录</a>
+      <a class="login-a" href="/login" target="_self">已有账户？点击登录</a>
     </el-form>
   </div>
 </template>
 
 <script>
+import {Message} from "element-ui";
+
 export default {
   name: "register",
   data(){
-
+    let validatorAccount=(rule,value,callback)=>{
+      if(value === ''){
+        callback(new Error('用户名（学号）不能为空'))
+      }else if(!/^\d{9}$/.test(value)){
+        callback(new Error('学号格式错误'))
+      }else{
+        callback()
+      }
+    };
     let validatorPhone=(rule,value,callback)=> {
       if (value === '') {
-        callback(new Error('手机号不能为空'))
+        callback(/*new Error('手机号不能为空')*/)
       } else if (!/^1\d{10}$/.test(value)) {
         callback(new Error('手机号格式错误'))
       } else {
         callback()
       }
     };
-    let validatorcheckPassword=(rule,value,callback)=>{
+    let validatorCheckPassword=(rule,value,callback)=>{
       if(value===''){
         callback(new Error('再次输入密码'))
       }else if(!value===this.registerForm.password){
@@ -51,7 +61,7 @@ export default {
     };
     let validatorEmail=(rule,value,callback)=>{
       if (value === '') {
-        callback(new Error('邮箱地址不能为空'))
+        callback(/*new Error('邮箱地址不能为空')*/)
       } else if (!/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/.test(value)) {
         callback(new Error('邮箱地址格式错误'))
       } else {
@@ -61,19 +71,19 @@ export default {
     return{
       rules: {
         account: [
-          {required: true, message: '请输入用户名', trigger: 'blur'}
+          {required: true, validator: validatorAccount, trigger: 'blur'},
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'},
         ],
         checkPassword: [
-          {required:true,validator:validatorcheckPassword,trigger:'blur'}
+          {required:true, validator: validatorCheckPassword, trigger:'blur'}
         ],
         email:[
-          {required:true, validator:validatorEmail, trigger:'blur'}
+          {required: false, validator: validatorEmail, trigger:'blur'}
         ],
         phone:[
-          {required: true, validator: validatorPhone, trigger:'blur'}
+          {required: false, validator: validatorPhone, trigger:'blur'}
         ]
       },
       registerForm: {
@@ -89,25 +99,34 @@ export default {
   methods:{
 
     submitRegister(registerData){
-      this.$router.go(-1)
-      this.$refs[registerData].validate(valid => {
-        // console.log(this.registerForm.account+"+"+this.registerForm.password)
+      let vm=this;
+      // this.$router.go(-1)
+      vm.$refs[registerData].validate(valid => {
+        console.log(vm.registerForm.account+"+"+vm.registerForm.password+"+"+vm.registerForm.email+"+"+vm.registerForm.phone)
         if (valid) {
           // alert('提交成功！')
-          this.loading=true
-          this.$http({
-            method:"get",
-            url:"http://localhost:1111/register?account="+this.registerForm.account+"&password="+this.registerForm.password+"&email="+this.registerForm.email+"&phone="+this.registerForm.phone,
-          }).then(function (res){
-            this.loading=false
-            let status=res.data["registerStatus"]
-            if(status===false){
-              this.$message.error(res.data["reason"])
-            }else {
-              this.$message.success("注册成功!")
-              this.$router.go(-1)
-            }
-          });
+          vm.loading=true
+
+          vm.$store.dispatch('token/register',vm.registerForm).then(()=>{
+            vm.loading=false;
+            vm.$router.push('/login');
+          }).catch(error=>{
+            vm.loading=false;
+            Message.error(error||'发生错误，请稍后再试');
+          })
+          // this.$http({
+          //   method:"get",
+          //   url:"http://localhost:1111/register?account="+this.registerForm.account+"&password="+this.registerForm.password+"&email="+this.registerForm.email+"&phone="+this.registerForm.phone,
+          // }).then(function (res){
+          //   this.loading=false
+          //   let status=res.data["registerStatus"]
+          //   if(status===false){
+          //     this.$message.error(res.data["reason"])
+          //   }else {
+          //     this.$message.success("注册成功!")
+          //     this.$router.go(-1)
+          //   }
+          // });
         } else {
           console.log("error submit！")
           return false

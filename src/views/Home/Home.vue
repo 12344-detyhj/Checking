@@ -9,8 +9,8 @@
 
 // @ is an alias to /src
 import mapGetters from 'vuex'
-import mainMenu from "@/views/Home/components/mainMenu/mainMenu";
-import homeworkStudent from "@/views/Home/components/homework/homeworkStudent";
+import mainMenu from "@/views/mainMenu/mainMenu";
+import homeworkStudent from "@/views/homework/homeworkStudent";
 import sidebar from '@/views/Home/components/sidebar/sidebar'
 import appMain from "@/views/Home/components/appMain";
 export default {

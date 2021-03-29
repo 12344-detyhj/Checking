@@ -20,6 +20,20 @@ export function getInfo(token) {
     })
 }
 
+export function register(account, password, email, phone){
+    return request({
+        url:baseUrl+'/user/register',
+        method: 'post',
+        params:{
+            account:account,
+            password:password,
+            email:email,
+            phone:phone,
+        }
+    })
+}
+
+
 export function logout() {
     return request({
         url: baseUrl+'/user/logout',
